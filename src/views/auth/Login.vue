@@ -145,16 +145,27 @@ const handleLogin = async () => {
   try {
     const res = await api.post('/auth/login', form.value);
     
-    // Simpan token & user ke Pinia Store
-    authStore.setAuth(res.data.token, res.data.user);
+    localStorage.setItem('token', res.data.token);
+    localStorage.setItem('user', JSON.stringify(res.data.user));
+
+    if (typeof authStore.setAuth === 'function') {
+      authStore.setAuth(res.data.token, res.data.user);
+    } else {
+      authStore.token = res.data.token;
+      authStore.user = res.data.user;
+      authStore.isAuthenticated = true;
+    }
     
     toast.success('Login berhasil!', { description: 'Selamat datang kembali.' });
     
-    // Arahkan berdasarkan role
+
     if (res.data.user.role === 'ADMIN' || res.data.user.role === 'SUPER_ADMIN') {
       router.push('/admin/dashboard');
+    } else if (res.data.user.role === 'CPD') {
+      
+      router.push('/student/dashboard'); 
     } else {
-      router.push('/student/dashboard');
+      router.push('/');
     }
   } catch (error) {
     toast.error('Gagal masuk', {
