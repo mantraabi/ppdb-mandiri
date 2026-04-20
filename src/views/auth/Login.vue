@@ -54,14 +54,26 @@
                 Lupa sandi?
               </router-link>
             </div>
-            <Input 
-              id="password" 
-              type="password" 
-              v-model="form.password" 
-              required 
-              placeholder="••••••••" 
-              class="h-11 bg-slate-50 focus:bg-white transition-colors" 
-            />
+            
+            <div class="relative">
+              <Input 
+                id="password" 
+                :type="showPassword ? 'text' : 'password'" 
+                v-model="form.password" 
+                required 
+                placeholder="••••••••" 
+                class="h-11 bg-slate-50 focus:bg-white transition-colors pr-10" 
+              />
+              
+              <button 
+                type="button" 
+                @click="showPassword = !showPassword" 
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
+              >
+                <Eye v-if="!showPassword" class="w-5 h-5" />
+                <EyeOff v-else class="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           <Button type="submit" :disabled="isLoading" class="w-full h-11 text-base font-medium bg-blue-600 hover:bg-blue-700 text-white shadow-md transition-all">
@@ -102,6 +114,7 @@ import { toast } from 'vue-sonner';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Eye, EyeOff } from 'lucide-vue-next';
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -109,6 +122,7 @@ const baseURL = import.meta.env.VITE_BASE_URL;
 
 const form = ref({ email: '', password: '' });
 const isLoading = ref(false);
+const showPassword = ref(false);
 
 // State untuk memuat logo dinamis dari pengaturan sekolah
 const schoolProfile = ref({ logo_url: '' });
