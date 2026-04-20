@@ -163,7 +163,7 @@ const handleLogin = async () => {
       router.push('/admin/dashboard');
     } else if (res.data.user.role === 'CPD') {
       
-      router.push('/student/dashboard'); 
+      router.push('/cpd/dashboard'); 
     } else {
       router.push('/');
     }
